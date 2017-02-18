@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css" media="screen">
+        .box {
+            width:100%;
+            height:500px;
+            text-align:center;
+            position:relative;
+        }
+        .container {
+            width:80%;
+            height:400px;
+            border:1px solid red;
+            text-align:left;
+            margin:0 auto;
+        }
+        .container span {
+            display:inline-block;
+            border:1px solid red;
+            transition: all 2s;
+            transform:translateY(0px) rotate(0deg);
+            font-size:14px;
+        }
+        textarea {
+            width:200px;
+            resize:none;
+            height:20px;
+            line-height:20px;
+            padding:10px 0px;
+            font-size:14px;
+            font-weight:400;
+        }
+        .clone {
+            font-size:14px;
+            border:1px solid red;
+            width:80%;
+            height:20px;
+            margin:0 auto;
+            line-height:20px;
+            padding:10px 0px;
+            text-align:left;
+            visibility:hidden;
+        }
+        .clone span {
+            transition:all 2s;
+            position:absolute;
+        }
+
+    </style>
+</head>
+<body>
+    <div class= "box">
+        <div class="container">
+
+        </div>
+        <div class="clone">
+            <span class="inner"></span>
+        </div>
+        <textarea class="textarea" placeholder="请输入文字"></textarea>
+    </div>
+</body>
+    <script>
+    //计算出input输入框的偏移值
+    var container = document.querySelector(".container");
+    var inner = document.querySelector(".inner");
+    var clone = document.querySelector(".clone");
+    var textarea = document.querySelector(".textarea");
+    var offx = (container.offsetWidth - textarea.offsetWidth-20)/2;
+    var offy = (container.offsetHeight + inner.offsetHeight);
+
+        //创造一个span标签 需要注入需要注入起始坐标
+        function createspan(text,x,y) {
+           this.text = text;
+           this.x = x;
+           this.y = y;
+           this.init = {};
+        }
+        createspan.prototype.render = function() {
+            var span = document.createElement("span");
+            container.appendChild(span);
+            span.style.display = "inline-block";
+            span.style.transform = "translateX("+this.x+"px) translateY("+this.y+"px) rotate(720deg)";
+            span.style.transition = "all 2s";
+            span.innerHTML = this.text;
+            this.init = span;
+        }
+        createspan.prototype.recover = function() {
+            var that = this;
+            setTimeout(function(){
+                that.init.style.transform = "translateX(0px) translateY(0px) rotate(0deg)";
+            },10)
+        }
+        var newtext = "";
+        var oldtext = "";
+        var x = 0;
+        var y = 0;
+        var total = "";
+        //监听textarea文本框的输入变化情况
+        textarea.addEventListener("input",function(){
+            var text = "";
+            if (inner.offsetWidth >= container.offsetWidth ) {
+                offx = (container.offsetWidth - textarea.offsetWidth-20)/2 - textarea.offsetWidth;
+            }
+            else if (inner.offsetWidth >= textarea.offsetWidth*3) {
+                offx = (container.offsetWidth - textarea.offsetWidth-20)/2 - textarea.offsetWidth*3;
+            }
+             else if (inner.offsetWidth >= textarea.offsetWidth*2) {
+                offx = (container.offsetWidth - textarea.offsetWidth-20)/2 - textarea.offsetWidth*2;
+            } else if(inner.offsetWidth>=textarea.offsetWidth) {
+                offx = (container.offsetWidth - textarea.offsetWidth-20)/2 - textarea.offsetWidth;
+            }
+
+            //先算文字的变化 两种情况一种是增加一种是减少
+            newtext = textarea.value;
+            oldtext = inner.innerHTML;
+            newtext = newtext.trim();
+            //添加字符
+            if(newtext.length > oldtext.length) {
+                for(var i = 0;i < newtext.length;i++) {
+                    if(newtext[i] != oldtext[i]) {
+                       text += newtext[i];
+                        inner.innerHTML = newtext;
+                    }
+                }
+                total += text;
+                // 生成
+                    for(var i =0;i < text.length;i++) {
+
+                        var a = new createspan(text[i],offx,offy);
+                        a.render();
+                        a.recover();
+                    }
+            }
+            //删除字符
+
+        })
+    </script>
+</html>

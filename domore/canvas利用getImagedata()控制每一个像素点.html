@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+    <canvas id="can" width="800" height="400">
+
+    </canvas>
+    <input type="text"  id = "txt" name=""><input type="button" value="提交" id="btn" name="">
+</body>
+<script>
+    var can = document.getElementById("can");
+    var ctx = can.getContext("2d");
+    var ww = can.offsetWidth;
+    var wh = can.offsetHeight;
+    var txt = document.querySelector("#txt");
+    var btn = document.querySelector("#btn");
+
+        create.prototype.draw = function(txt) {
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            // ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+            // ctx.fill();
+            ctx.font = "10px 宋体";
+
+            ctx.fillText("❤",this.x,this.y);
+
+        }
+
+        function create(i,j) {
+            this.x = i;
+            this.y = j;
+            this.r = 2;
+        }
+        function gender(txt){
+            ctx.save();
+            ctx.fillStyle = "rgba(255,0,0,1)";
+            ctx.font = "400px 宋体";
+            ctx.textAlign = "center";
+            //ctx.textBaseLine = "middle";
+            ctx.textBaseline="middle";
+            ctx.fillText(txt,ww/2,wh/2);
+            ctx.restore();
+            var imgdata = ctx.getImageData(0,0,ww,wh);
+            var newdata = [];
+            for(var i =0;i < imgdata.width;i+=20) {
+                for(var j =0;j < imgdata.height;j += 20) {
+                    var index = (j*imgdata.width + i)*4;
+                    if(imgdata.data[index] > 126) {
+                        var data = new create(i,j);
+                        newdata.push(data);
+                    }
+                }
+            }
+            ctx.clearRect(0, 0, ww, wh);
+            for (var i =0;i < newdata.length;i++) {
+            newdata[i].draw(txt);
+            }
+        }
+        gender("❤");
+        btn.onclick = function() {
+            var text = txt.value;
+            console.log(text);
+            gender(text);
+        }
+
+</script>
+</html>
