@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="can" width="800" height="400" style="border:1px solid red;display:block;margin:0 auto;">
+
+    </canvas>
+</body>
+<script>
+    //先获得绘图环境
+    var can = document.getElementById("can");
+    var ctx = can.getContext("2d");
+    var ww = can.offsetWidth;
+    var wh = can.offsetHeight;
+    //景深
+    var deep = 500;
+    var count = 1000;
+    var arr = [];
+    var z = "";
+    //声明一个存储变量
+    var dots = [];
+
+    //初始化
+        for(var i =0 ;i < count;i++) {
+            var dot = [Math.random()*400 -200,Math.random()*400 -200,Math.random()*400 -200];
+            dots.push(dot);
+        }
+    function render() {
+        //先绘制背景
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,ww,wh);
+        for(var i =0 ;i < dots.length;i++) {
+            arr = dots[i];
+            z = arr[2];
+            z -= 4;
+            //如果z+deep < 0  后面的没办法算
+            if( z < -deep) {
+                z += 400;
+            }
+            arr[2] = z;
+            render3d(arr);
+
+        }
+    }
+
+    function render3d(arr) {
+        //缩放倍率在0 - 100倍之间
+        var scale = deep / (deep + arr[2]);
+        ctx.beginPath();
+        ctx.lineWidth = scale;
+        //ctx.font = "100px,宋体";
+        ctx.strokeStyle = "orange";
+         ctx.moveTo(arr[0]*scale + ww/2,arr[1]*scale +wh/2);
+         ctx.lineTo(arr[0]*scale+scale+ ww/2,arr[1]*scale+wh/2);
+        ctx.stroke();
+    }
+    //循环调用
+    setInterval(function(){
+        render();
+    },50)
+</script>
+</html>
