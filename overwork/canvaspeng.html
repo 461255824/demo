@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="can" width="800" height="400" style="border:1px solid red;margin:0 auto;display: block;">
+
+    </canvas>
+</body>
+    <script>
+        var can = document.getElementById("can");
+        var ctx = can.getContext("2d");
+        var ww = can.offsetWidth;
+        var wh = can.offsetHeight;
+
+        //创建对象
+        var line = {
+            // width:Math.round(Math.random()*3+2),
+            // ww:0.2,
+            // way:[],
+            // x:Math.random()*ww,
+            // y:Math.random()*wh,
+            // vx:(Math.random() - 0.5)*3+3,
+            // vy:(Math.random() - 0.5)*3+3,
+            // color: new color(),
+            record:function() {
+                //判断是否碰壁
+                if(this.x < 0 || this.x > ww ) {
+                    this.vx = -this.vx
+                }
+                if( this.y < 0 || this.y > wh ) {
+                    this.vy = - this.vy;
+                }
+                this.x += this.vx;
+                this.y += this.vy;
+                var position = {};
+                position.x = this.x;
+                position.y = this.y;
+                this.way.unshift(position);
+            },
+            draw:function() {
+                //取出数组中前50项  每一项的透明度递减 宽度递减  直到冷
+                for(var i = 0;this.way[i] && i < 50;i++) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.fillStyle = "rgba("+this.color.r+","+this.color.g+","+this.color.b+","+((50-i)/50)+")";
+                    ctx.arc(this.way[i].x,this.way[i].y,(10-10/50*i),0,2*Math.PI);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+        }
+
+        //宽度递减
+        //构造函数创建多个
+        function createline() {
+            this.way = [];
+            this.way.length = 100;
+            this.width=Math.round(Math.random()*3+2);
+            this.ww=0.2;
+            this.x=Math.random()*ww;
+            this.y=Math.random()*wh;
+            this.vx=(Math.random() - 0.5)*3+3;
+            this.vy=(Math.random() - 0.5)*3+3;
+            this.color= new color();
+        }
+        createline.prototype = line;
+        //创建50个
+        var arr = [];
+        for(var i =0;i < 50;i++) {
+            var newline = new createline();
+            arr.push(newline);
+        }
+        //随机颜色
+        function color() {
+            this.r =  get255();
+            this.g =  get255();
+            this.b =  get255();
+        }
+        function get255() {
+            return Math.round(Math.random()*255);
+        }
+        //一直执行
+        setInterval(function(){
+            ctx.clearRect(0, 0, ww, wh);
+            // line.record();
+            // line.draw();
+            //调用的时候就循环数组中的对象
+            for (var i =0 ;i < arr.length;i++) {
+                arr[i].record();
+
+            }
+            for (var i =0 ;i < arr.length;i++) {
+                arr[i].draw();
+            }
+        },16)
+
+    </script>
+</html>
