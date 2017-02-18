@@ -1,13 +1,21 @@
-/*
-* @Author: Marte
-* @Date:   2017-02-18 18:45:56
-* @Last Modified by:   Marte
-* @Last Modified time: 2017-02-18 18:46:14
-*/
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css" media="screen">
+        canvas {
+            border:1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas width="600" height="400">
 
-'use strict';
-window.onload = function(){
-    var cas = document.getElementsByTagName("canvas")[0];
+    </canvas>
+</body>
+<script >
+var cas = document.getElementsByTagName("canvas")[0];
     var ctx = cas.getContext("2d");
     //弧度和角度的转化  Math.PI/180 = 弧度/角度
     function toAngle(radian) {
@@ -45,4 +53,5 @@ window.onload = function(){
     ctx.stroke();
    }
    },15)
-}
+</script>
+</html>
