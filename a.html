@@ -5,9 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+
+        }
+        html,body {
+            height:100%;
+            width:100%;
+        }
+        #search {
+            width:100%;
+            display: block;
+            height:40px;
+            position:absolute;
+            bottom:0;
+            border:2px solid purple;
+        }
+        .box {
+            width:100%;
+            height:100%;
+            position: relative;
+        }
+    </style>
 </head>
 <body>
     
-    <input type="search" name="" value="">
+   <form class = "box">
+        <input type="search" id="search">
+   </form>
 </body>
 </html>
